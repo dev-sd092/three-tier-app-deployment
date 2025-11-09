@@ -175,12 +175,13 @@ Repeated the same for the backend (different port, e.g., 8080).
 
 ### 📸 Screenshots
 |Section|	ScreenShot |
-|🖥️ Application |	<img width="1902" height="1028" alt="Screenshot 2025-11-09 041718" src="https://github.com/user-attachments/assets/5bb1c5c1-6f79-42d2-a6ba-64034772c71a" /> |
-|☁️ Load Balancer | <img width="1616" height="217" alt="Screenshot 2025-11-09 041733" src="https://github.com/user-attachments/assets/a73dd65d-7c20-4783-bef5-33fe7d86df99" /> |	
-|🧩 EKS Cluster	| <img width="1561" height="209" alt="Screenshot 2025-11-09 041801" src="https://github.com/user-attachments/assets/dd1c4187-3d19-4991-911c-c793c062b94b" /> |
-|🐳 ECR	| <img width="1566" height="226" alt="Screenshot 2025-11-09 041831" src="https://github.com/user-attachments/assets/f8123dfb-86a8-4558-9bd6-3f8cd83d03c1" /> |
-|🧮 EC2	| <img width="1608" height="250" alt="Screenshot 2025-11-09 041743" src="https://github.com/user-attachments/assets/4425aabc-6e31-494c-b4ae-9bdeab9c4aab" /> |
-|📂 Database |	<img width="1667" height="262" alt="Screenshot 2025-11-09 042617" src="https://github.com/user-attachments/assets/ede178f0-11a5-4ac9-9670-701ca6ad91ae" /> |
+|-------|------------|
+|**🖥️ Application** |	<img width="1902" height="1028" alt="Screenshot 2025-11-09 041718" src="https://github.com/user-attachments/assets/5bb1c5c1-6f79-42d2-a6ba-64034772c71a" /> |
+|**☁️ Load Balancer** | <img width="1616" height="217" alt="Screenshot 2025-11-09 041733" src="https://github.com/user-attachments/assets/a73dd65d-7c20-4783-bef5-33fe7d86df99" /> |	
+|**🧩 EKS Cluster**	| <img width="1561" height="209" alt="Screenshot 2025-11-09 041801" src="https://github.com/user-attachments/assets/dd1c4187-3d19-4991-911c-c793c062b94b" /> |
+|**🐳 ECR**	| <img width="1566" height="226" alt="Screenshot 2025-11-09 041831" src="https://github.com/user-attachments/assets/f8123dfb-86a8-4558-9bd6-3f8cd83d03c1" /> |
+|**🧮 EC2**	| <img width="1608" height="250" alt="Screenshot 2025-11-09 041743" src="https://github.com/user-attachments/assets/4425aabc-6e31-494c-b4ae-9bdeab9c4aab" /> |
+|**📂 Database** |	<img width="1667" height="262" alt="Screenshot 2025-11-09 042617" src="https://github.com/user-attachments/assets/ede178f0-11a5-4ac9-9670-701ca6ad91ae" /> |
 
 ---
 
