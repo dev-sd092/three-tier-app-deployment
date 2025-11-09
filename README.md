@@ -43,10 +43,10 @@ The goal was to containerize each application layer, push Docker images to **Ama
 ### 2️⃣ Frontend & Backend Dockerization
 - Wrote Dockerfiles for frontend and backend applications.
 - Built and verified containers locally:
-
+```bash
   docker build -t frontend:latest .
   docker run -d -p 3000:3000 frontend
-
+```
 - Opened port 3000 in EC2 Security Group for browser access.
 Repeated the same for the backend (different port, e.g., 8080).
 
@@ -55,16 +55,19 @@ Repeated the same for the backend (different port, e.g., 8080).
 ### 3️⃣ Push Docker Images to ECR
 
 - Installed AWS CLI:
+  ```bash
   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   unzip awscliv2.zip
   sudo ./aws/install
   aws configure
-
+  ```
 - Created private ECR repositories (frontend & backend).
 - Followed AWS push commands:
+  ```bash
   aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.us-west-1.amazonaws.com
   docker tag frontend:latest <ECR_URI>/frontend:latest
   docker push <ECR_URI>/frontend:latest
+  ```
 - Repeated for backend.
 
 ---
@@ -72,41 +75,50 @@ Repeated the same for the backend (different port, e.g., 8080).
 ### 4️⃣ Create and Configure EKS Cluster
 
 - Installed kubectl and eksctl:
-  # kubectl
+  ### kubectl
+  ```bash
   curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
   chmod +x ./kubectl && sudo mv ./kubectl /usr/local/bin
   kubectl version --short --client
-
-  # eksctl
+  ```
+  
+  ### eksctl
+  ```bash
   curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
   sudo mv /tmp/eksctl /usr/local/bin
   eksctl version
-
+  ```
 - Then created the EKS cluster:
+  ```bash
   eksctl create cluster --name three-tier-cluster --region us-east-1 --node-type t2.medium --nodes-min 2 --nodes-max 2
   aws eks update-kubeconfig --region us-east-1 --name three-tier-cluster
   kubectl get nodes
-
+  ```
 ---
 
 ### 5️⃣ Deploy Application to EKS
 
 - Created a dedicated namespace:
+  ```bash
   kubectl create ns three-tier
-
+  ```
+  
 - Applied manifests in order:
   database.yaml → MongoDB
   backend.yaml → API
   frontend.yaml → Web UI
 
 - Verified pods and services:
+  ```bash
   kubectl get all -n three-tier
-
+  ```
+  
 ---
 
 ### 6️⃣ Configure AWS Load Balancer Controller
 
 - Installed IAM policies and Helm chart to enable ALB ingress for external access:
+  ```bash
   curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
   aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json
 
@@ -118,8 +130,12 @@ Repeated the same for the backend (different port, e.g., 8080).
     --role-name AmazonEKSLoadBalancerControllerRole \
     --attach-policy-arn=arn:aws:iam::<ACCOUNT_ID>:policy/AWSLoadBalancerControllerIAMPolicy \
     --approve --region=us-west-1
+   ```
+
+---
 
 - Install Helm and deploy controller:
+  ```bash
   sudo snap install helm --classic
   helm repo add eks https://aws.github.io/eks-charts
   helm repo update
@@ -128,7 +144,7 @@ Repeated the same for the backend (different port, e.g., 8080).
     --set clusterName=three-tier-cluster \
     --set serviceAccount.create=false \
     --set serviceAccount.name=aws-load-balancer-controller
-
+  ```
 ---
 
 ### 7️⃣ Deploy Ingress
@@ -140,11 +156,12 @@ Repeated the same for the backend (different port, e.g., 8080).
 
 ### 8️⃣ Validate Database Entries
 - Checked live data inside MongoDB running in the cluster:
+  ```bash
   kubectl exec -it mongodb-<pod> -n three-tier -- /bin/sh
   show dbs
   use todo
   db.tasks.find()
-
+  ```
 ---
 
 ### 🧩 Common Issue and Fix
@@ -156,13 +173,14 @@ Repeated the same for the backend (different port, e.g., 8080).
 - IAM role attached to the AWS Load Balancer Controller was missing one or more updated ELBv2 permissions.
 
 ## Fix:
+  ```bash
  curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
  aws iam put-role-policy \
    --role-name AmazonEKSLoadBalancerControllerRole \
    --policy-name AWSLoadBalancerControllerAdditionalPolicy \
    --policy-document file://iam_policy.json
  kubectl -n kube-system rollout restart deployment aws-load-balancer-controller
-
+```
 ## ✅ Result: ALB successfully created, application publicly accessible.
 
 ---
